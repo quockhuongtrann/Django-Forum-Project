@@ -1,0 +1,95 @@
+{% extends 'main.html' %}
+{% load static %}
+{% load forum_tags %}
+{% block content %}
+    {% for article in articles %}
+        <div class="card mb-3">
+            <div class="row">
+                <div class="col-md-4">
+                    <figure class="mb-0">
+                        <img src="{{ article.get_thumbnail }}" class="img-fluid h-100 img-thumbnail" alt="{{ article.title }}">
+                    </figure>
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title"><a href="{{ article.get_absolute_url }}">{{ article.title|slice:":30"}}...</a></h5>
+                        <p class="card-text">
+                            {{ article.short_description|slice:":100"|safe }}...
+                        </p>
+                        
+                        {% get_article_author_rating article request.user as rating_value %}
+                        
+                        <strong>Tags</strong>: {% for tag in article.tags.all %} <a href="{% url 'article-list-by-tags' tag.slug %}">{{ tag }}</a>, {% endfor %}
+                        <hr>
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="card-text">
+                                    <button class="btn shadow-sm btn-sm btn-success btn-like p-1" data-id="{{ article.pk }}" data-action="like" type="button" data-rating-like="{{ article.pk }}">Like ({{ article.get_like_sum }})</button>
+                                    <button class="btn shadow-sm btn-sm btn-danger btn-dislike p-1" data-id="{{ article.pk }}" data-action="dislike" type="button" data-rating-dislike="{{ article.pk }}">Dislike ({{ article.get_dislike_sum }})</button>
+                                    <a author-rating-status="{{ article.pk }}">
+                                        {% if rating_value == 1 %}
+                                            You Liked
+                                        {% elif rating_value == -1 %}
+                                            You Disliked
+                                        {% else %}
+                                            No rating
+                                        {% endif %}
+                                    </a>
+                                </div>
+                            </div>
+                            {% if request.user == article.author %}
+                                <div class="col-4 float-end">
+                                    <a href="{% url 'article-update-view' article.slug %}">Chỉnh sửa</a> /
+                                    <a href="{% url 'article-delete-view' article.slug %}">Xóa</a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
+{% block sidebar %}
+<div class="card mb-2 border-0">
+    <div class="card-body" >
+        <div class="card-title">
+           <h5>Demo các chức năng</h5>
+        </div>
+        <div class="card-text">
+            <h6>Authorization</h6>
+            <ul style="list-style-type:none;">
+                <li>Đăng ký</li>
+                <li>Đăng nhập</li>
+                <li>Đăng xuất</li>
+                <li>Đổi mật khẩu</li>
+                <li>Quên mật khẩu</li>
+            </ul>
+            <h6>CRUD các bài viết</h6>
+            <ul style="list-style-type:none;">
+                <li>Thêm bài viết</li>
+                <li>Xem bài viết(có phân trang)</li>
+                <li>Chỉnh sửa bài viết</li>
+                <li>Xóa bài viết</li>
+            </ul>
+            <h6>Hệ thống bình luận</h6>
+            <ul style="list-style-type:none;"> 
+                <li>Thêm bình luận</li>
+                <li>Phản hồi bình luận</li>
+                <li>Xóa bình luận</li>
+            </ul>
+            <h6>Khác</h6>
+            <ul style="list-style-type:none;">
+                <li>Chỉnh sửa Profile</li>
+                <li>Hệ thống Rating</li>
+                <li>Tìm kiếm</li>
+                <li>Phân loại theo Tags</li>
+                <li>Hệ thống Subcribers</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock  %}
+{% block script %}
+    <script src="{% static 'custom/js/article_list.js' %}"></script>
+{% endblock %}

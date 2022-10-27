@@ -1,0 +1,12 @@
+{% autoescape off %}
+
+Xin chào {{ user.get_username }},
+
+Để xác nhận tài khoản bạn đã đăng ký trên TQK forum, hãy nhấn vào link bên dưới:
+     http://{{ domain }}{% url 'activate' uidb64=uid token=token %}
+
+Cảm ơn bạn đã tham gia vào forum của tôi.
+
+TQK.
+
+{% endautoescape %}
