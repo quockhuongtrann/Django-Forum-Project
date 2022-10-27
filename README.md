@@ -8,6 +8,6 @@
 
 ### Database
 - PostgreSQL
-- ERD diagram
-
+- ERD diagram 
+- ![alt text](https://github.com/quockhuongtrann/Django-Forum-Project/blob/main/forum_uml.drawio.png) <br/>
 💖 Many thanks to tutorial at: https://notehunter.net/ 💖
